@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<title>EDMdesigner -- Publisher Test</title>
+		<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+		<script src="http://knockoutjs.com/downloads/knockout-3.0.0.js"></script>
+		<script src="//localhost:3000/plugin.js"></script>
+		<script>
+			initEDMdesignerPlugin("pluginTest", function(edmPlugin) {
+				function updateProjectList() {
+					edmPlugin.listProjects(function(result) {
+						testVm.projects(result);
+					});
+				}
+
+				var testVm = {
+					projects: ko.observableArray([]),
+					newProject: {
+						title: ko.observable("dd"),
+						description: ko.observable("ddd")
+					},
+					addNewProject: function() {
+						var data = {
+							title: testVm.newProject.title(),
+							description: testVm.newProject.description()
+						};
+
+						edmPlugin.createProject(data, updateProjectList);
+					},
+					deleteProject: function(project) {
+						edmPlugin.removeProject(project._id, updateProjectList);
+					},
+					duplicateProject: function(project) {
+						edmPlugin.duplicateProject(project._id, updateProjectList);
+					},
+					openProject: function(project) {
+						edmPlugin.openProject(project._id, function(result) {
+							$("body")
+								.append("<br/>")
+								.append(result.iframe);
+						});
+					},
+					updateProjectInfo: function(project) {
+						alert("later");
+					}
+				};
+
+				ko.applyBindings(testVm);
+
+				edmPlugin.listProjects(function(result) {
+					testVm.projects(result);
+				});
+			}, function(error) {
+				alert(error);
+			});
+		</script>
+	</head>
+	<body>
+		<h1>EDMdesigner -- Publisher Test</h1>
+
+		<h2>Projects</h2>
+		<ul data-bind="foreach: projects">
+			<li>
+				Title: <span data-bind="text: title"></span> Description: <span data-bind="text: description"></span> <button data-bind="click: $parent.duplicateProject">Duplicate</button> <button data-bind="click: $parent.deleteProject">Delete</button> <button data-bind="click: $parent.updateProjectInfo">Rename</button> <button data-bind="click: $parent.openProject">Open</button>
+			</li>
+		</ul>
+
+		<h2>New project</h2>
+		Title
+		<input type="text" data-bind="value: newProject.title"></input>
+		Description
+		<input data-bind="value: newProject.description"></input>
+		<button data-bind="click: addNewProject">Add</button>
+	</body>
+</html>

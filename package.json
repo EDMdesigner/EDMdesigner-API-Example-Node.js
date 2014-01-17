@@ -1,0 +1,17 @@
+{
+  "name": "EDMdesigner-API-Example-Node.js",
+  "version": "0.0.1",
+  "author": "EDMdesigner co.",
+  "dependencies": {
+    "express": "3.x",
+    "mongoose": "3.x",
+    "request": "",
+    "MD5": ""
+  },
+  "scripts": {
+    "start": "cd src; node server.js"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
